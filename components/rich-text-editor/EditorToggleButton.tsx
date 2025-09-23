@@ -29,7 +29,6 @@ export default function EditorToggleButton({
   type = "default",
 }: EditorToggleButtonProps) {
   if (!editor) return null;
-  console.log(disableAction);
   return (
     <Tooltip>
       <TooltipTrigger asChild>

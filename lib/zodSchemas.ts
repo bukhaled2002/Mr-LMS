@@ -1,4 +1,6 @@
+import { description } from "@/components/sidebar/chart-area-interactive";
 import z from "zod";
+import { vi } from "zod/v4/locales";
 
 export const CourseLevel = ["Beginner", "Intermediate", "Advanced"] as const;
 export const courseCategories = [
@@ -47,4 +49,19 @@ export const courseSchema = z.object({
   status: z.enum(CourseStatus, { message: "status is required" }),
 });
 
+export const chapterSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  courseId: z.string().uuid("Invalid course id"),
+});
+export const lessonSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  chapterId: z.string().uuid("Invalid chapter id"),
+  courseId: z.string().uuid("Invalid chapter id"),
+  videoUrlKey: z.string().optional(),
+  thubnailUrlKey: z.string().optional(),
+  description: z.string().optional(),
+});
+
 export type courseSchemaType = z.input<typeof courseSchema>;
+export type chapterSchemaType = z.input<typeof chapterSchema>;
+export type lessonSchemaType = z.input<typeof lessonSchema>;

@@ -30,6 +30,11 @@ model User {
   accounts      Account[]
   courses       Courses[]
 
+  role       String?
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
   @@unique([email])
   @@map("user")
 }
@@ -44,6 +49,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@map("session")
@@ -94,10 +101,11 @@ model Courses {
 
   status CourseStatus @default(Draft)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  chapters  Chapter[]
 }
 
 enum CourseLevel {
@@ -110,4 +118,33 @@ enum CourseStatus {
   Draft
   Published
   Archived
+}
+
+model Chapter {
+  id String @id @default(uuid())
+
+  title    String
+  position Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Courses   Courses  @relation(fields: [coursesId], references: [id], onDelete: Cascade)
+  coursesId String
+  lessons   Lesson[]
+}
+
+model Lesson {
+  id String @id @default(uuid())
+
+  title          String
+  description    String?
+  thubnailUrlKey String?
+  videoUrlKey    String?
+  position       Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
 }
