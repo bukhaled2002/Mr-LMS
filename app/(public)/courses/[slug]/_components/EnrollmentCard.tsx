@@ -1,5 +1,6 @@
 import { PublicSingleCourseType } from "@/app/data-layer/courses/public-single-course";
-import { Button } from "@/components/ui/button";
+import { isUserEnrolled } from "@/app/data-layer/user/is-user-enrolled";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   IconBook,
@@ -8,12 +9,18 @@ import {
   IconClock,
 } from "@tabler/icons-react";
 import { CheckIcon } from "lucide-react";
+import Link from "next/link";
+import { useTransition } from "react";
+import { toast } from "sonner";
+import EnrollmentButton from "./EnrollmentButton";
 
-export default function EnrollmentCard({
+export default async function EnrollmentCard({
   course,
 }: {
   course: PublicSingleCourseType;
 }) {
+  const isEnrolled = await isUserEnrolled(course.id);
+
   return (
     <div className="grid-cols-1 order-2">
       <div className="sticky top-20">
@@ -112,7 +119,7 @@ export default function EnrollmentCard({
                 </li>
               </ul>
             </div>
-            <Button className="w-full">Enroll Now</Button>
+            <EnrollmentButton courseId={course.id} isEnrolled={isEnrolled} />
             <p className="text-center text-muted-foreground text-xs mt-3">
               30-day money-back gurantee
             </p>

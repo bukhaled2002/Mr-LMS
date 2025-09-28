@@ -1,9 +1,11 @@
+"use server";
 import { prisma } from "@/lib/db";
 
 export async function getSingleCourse(slug: string) {
   if (!slug) {
     throw new Error("Slug is required");
   }
+  console.log(slug);
   const course = await prisma.courses.findUnique({
     where: { slug },
     select: {
@@ -36,6 +38,7 @@ export async function getSingleCourse(slug: string) {
   if (!course) {
     throw new Error("Course not found");
   }
+  console.log(course);
   return course;
 }
 export type PublicSingleCourseType = Awaited<

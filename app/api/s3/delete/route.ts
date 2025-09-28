@@ -4,9 +4,7 @@ import { s3Client } from "@/lib/s3";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-const aj = arcjet
-  .withRule(detectBot({ allow: [], mode: "LIVE" }))
-  .withRule(fixedWindow({ mode: "LIVE", max: 6, window: "1m" }));
+const aj = arcjet.withRule(fixedWindow({ mode: "LIVE", max: 6, window: "1m" }));
 export async function DELETE(req: Request) {
   try {
     const session = await auth.api.getSession({ headers: await headers() });

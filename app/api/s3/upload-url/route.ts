@@ -4,7 +4,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client } from "@/lib/s3";
 import z from "zod";
 import { v4 as uuidv4 } from "uuid";
-import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
+import arcjet, { fixedWindow } from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -14,9 +14,7 @@ export const fileUploadSchema = z.object({
   size: z.number().min(1, { message: "please Add Size" }),
   isImage: z.boolean(),
 });
-const aj = arcjet
-  .withRule(detectBot({ allow: [], mode: "LIVE" }))
-  .withRule(fixedWindow({ mode: "LIVE", max: 2, window: "1m" }));
+const aj = arcjet.withRule(fixedWindow({ mode: "LIVE", max: 2, window: "1m" }));
 export async function POST(req: Request) {
   try {
     const session = await auth.api.getSession({ headers: await headers() });

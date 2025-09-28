@@ -30,10 +30,13 @@ model User {
   accounts      Account[]
   courses       Courses[]
 
-  role       String?
-  banned     Boolean?  @default(false)
-  banReason  String?
-  banExpires DateTime?
+  enrollments Enrollment[]
+  role        String?
+  banned      Boolean?     @default(false)
+  banReason   String?
+  banExpires  DateTime?
+
+  stripeCustomerId String? @unique
 
   @@unique([email])
   @@map("user")
@@ -87,25 +90,25 @@ model Verification {
 }
 
 model Courses {
-  id          String      @id @default(uuid())
-  title       String
-  description String
-  fileKey     String
-  price       Int
-  duration    Int
-  level       CourseLevel @default(Beginner)
-
+  id               String      @id @default(uuid())
+  title            String
+  description      String
+  fileKey          String
+  price            Int
+  duration         Int
+  level            CourseLevel @default(Beginner)
+  stripePriceId    String?     @unique @default(uuid())
   category         String
   smallDescription String
-  slug             String @unique
+  slug             String      @unique
 
-  status CourseStatus @default(Draft)
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  chapters  Chapter[]
+  status      CourseStatus @default(Draft)
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  chapters    Chapter[]
 }
 
 enum CourseLevel {
@@ -147,4 +150,25 @@ model Lesson {
   updatedAt DateTime @updatedAt
   Chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   chapterId String
+}
+
+model Enrollment {
+  id     String           @id @default(uuid())
+  amount Int
+  status EnrollmentStatus @default(Pending)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  Courses   Courses  @relation(fields: [coursesId], references: [id], onDelete: Cascade)
+  coursesId String
+
+  @@unique([userId, coursesId])
+}
+
+enum EnrollmentStatus {
+  Active
+  Pending
+  Cancelled
 }

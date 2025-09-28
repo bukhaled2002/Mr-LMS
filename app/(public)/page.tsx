@@ -1,12 +1,10 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ThemeToggle } from "@/components/ui/mode-toggle";
 import { authClient } from "@/lib/auth-client";
 import { Users, ChartColumn, SquareMousePointer, Blocks } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 interface Feature {
   title: string;
@@ -41,6 +39,10 @@ const features: Feature[] = [
 ];
 
 export default function Page() {
+  const { data: session, isPending } = authClient.useSession();
+  if (isPending) {
+    return <p className="text-center">Loading...</p>;
+  }
   return (
     <>
       <section className="relative py-20">
@@ -62,15 +64,17 @@ export default function Page() {
             >
               Explore Courses
             </Link>
-            <Link
-              href="/courses"
-              className={buttonVariants({
-                size: "lg",
-                variant: "outline",
-              })}
-            >
-              Sign in
-            </Link>
+            {!session?.user && (
+              <Link
+                href="/sign-in"
+                className={buttonVariants({
+                  size: "lg",
+                  variant: "outline",
+                })}
+              >
+                Sign in
+              </Link>
+            )}
           </div>
         </div>
       </section>
