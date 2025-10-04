@@ -36,7 +36,8 @@ model User {
   banReason   String?
   banExpires  DateTime?
 
-  stripeCustomerId String? @unique
+  stripeCustomerId String?          @unique
+  LessonProgress   LessonProgress[]
 
   @@unique([email])
   @@map("user")
@@ -146,10 +147,12 @@ model Lesson {
   videoUrlKey    String?
   position       Int
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  chapterId String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  Chapter        Chapter          @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId      String
+  enrollment     Enrollment[]
+  lessonProgress LessonProgress[]
 }
 
 model Enrollment {
@@ -157,12 +160,14 @@ model Enrollment {
   amount Int
   status EnrollmentStatus @default(Pending)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  Courses   Courses  @relation(fields: [coursesId], references: [id], onDelete: Cascade)
-  coursesId String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  User               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  Courses            Courses  @relation(fields: [coursesId], references: [id], onDelete: Cascade)
+  coursesId          String
+  lastViewedLessonId String?
+  lastViewedLesson   Lesson?  @relation(fields: [lastViewedLessonId], references: [id])
 
   @@unique([userId, coursesId])
 }
@@ -171,4 +176,22 @@ enum EnrollmentStatus {
   Active
   Pending
   Cancelled
+}
+
+model LessonProgress {
+  id String @id @default(uuid())
+
+  userId String
+
+  lessonId String
+
+  completed      Boolean  @default(false)
+  watchedSeconds Int      @default(0)
+  watchedPercent Float    @default(0) // 0 to 100
+  lastWatchedAt  DateTime @default(now())
+
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
 }

@@ -101,11 +101,12 @@ export default function CourseStructure({
       let targetChapterId = null;
       if (overType === "chapter") {
         targetChapterId = overId;
-      } else {
+      } else if (overType === "lesson") {
         targetChapterId = over.data.current?.chapterId ?? null;
       }
-      if (targetChapterId === null) {
+      if (!targetChapterId) {
         toast.error("Could not determine the chapter for reordering");
+        return;
       }
       const oldIndex = items.findIndex((item) => item.id === activeId);
       const newIndex = items.findIndex((item) => item.id === targetChapterId);
@@ -209,6 +210,16 @@ export default function CourseStructure({
       }
     }
   }
+
+  const toggleChapter = (chapterId: string) => {
+    setItems(
+      items.map((chapter) =>
+        chapter.id === chapterId
+          ? { ...chapter, isOpen: !chapter.isOpen }
+          : chapter
+      )
+    );
+  };
   return (
     <DndContext
       sensors={sensors}
@@ -221,7 +232,10 @@ export default function CourseStructure({
           <CreateChapterModal courseId={course?.id as string} />
         </CardHeader>
         <CardContent className="space-y-8">
-          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+          <SortableContext
+            items={items.map((ch) => ch.id)}
+            strategy={verticalListSortingStrategy}
+          >
             {items.map((item) => (
               <SortableItem
                 key={item.id}
@@ -232,15 +246,7 @@ export default function CourseStructure({
                   <Card>
                     <Collapsible
                       open={item.isOpen}
-                      onOpenChange={() =>
-                        setItems((prev) =>
-                          prev.map((chapter) =>
-                            chapter.id === item.id
-                              ? { ...chapter, isOpen: !chapter.isOpen }
-                              : chapter
-                          )
-                        )
-                      }
+                      onOpenChange={() => toggleChapter(item.id)}
                     >
                       <div className="flex items-center justify-between p-3 border-b border-border">
                         <div className="flex items-center gap-2 opacity-60 hover:opacity-100">
@@ -273,9 +279,7 @@ export default function CourseStructure({
                       <CollapsibleContent>
                         <div className="p-1">
                           <SortableContext
-                            items={item.lessons.map((lesson) => ({
-                              id: lesson.id,
-                            }))}
+                            items={item.lessons.map((lesson) => lesson.id)}
                             strategy={verticalListSortingStrategy}
                           >
                             {item.lessons.map((lesson) => (

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { DraggableSyntheticListeners } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ReactNode } from "react";
+import { ReactNode, CSSProperties } from "react";
 
 export function SortableItem({
   id,
@@ -27,11 +27,17 @@ export function SortableItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id, data: data });
+  } = useSortable({
+    id: id,
+    data: data,
+  });
 
-  const style = {
+  const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? 0.5 : 1,
+    position: "relative",
+    zIndex: isDragging ? 999 : "auto",
   };
 
   return (
@@ -39,7 +45,7 @@ export function SortableItem({
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={cn("touch-none", className, isDragging && "z-10")}
+      className={cn("touch-none", className)}
     >
       {children(listeners)}
     </div>
