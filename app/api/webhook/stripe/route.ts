@@ -1,11 +1,10 @@
-//api/webhook/stipe/route.ts
-"use server";
 import { prisma } from "@/lib/db";
 import stripe from "@/lib/stripe";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
 export async function POST(req: Request) {
+  console.log("the webhook was called");
   const body = await req.text();
   const headerList = await headers();
   console.log(body);
@@ -31,9 +30,13 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed") {
     const courseId = session.metadata?.courseId;
+    const enrollmentId = session.metadata?.enrollmentId;
     const customer = session.customer;
-    if (!courseId) {
-      throw new Error("No Course Found");
+
+    console.log("Session Metadata:", session.metadata);
+
+    if (!courseId || !enrollmentId) {
+      throw new Error("Missing metadata (courseId or enrollmentId)");
     }
 
     const user = await prisma.user.findUnique({
@@ -43,10 +46,8 @@ export async function POST(req: Request) {
       throw new Error("No User Found");
     }
     await prisma.enrollment.update({
-      where: { userId_coursesId: { userId: user.id, coursesId: courseId } },
+      where: { id: enrollmentId },
       data: {
-        userId: user.id,
-        coursesId: courseId,
         amount: session.amount_total as number,
         status: "Active",
       },
