@@ -115,7 +115,11 @@ export default async function EnrollmentCard({
                 </li>
               </ul>
             </div>
-            <EnrollmentButton courseId={course.id} isEnrolled={isEnrolled} />
+            <EnrollmentButton
+              courseId={course.id}
+              courseSlug={course.slug}
+              isEnrolled={isEnrolled}
+            />
             <p className="text-center text-muted-foreground text-xs mt-3">
               30-day money-back gurantee
             </p>

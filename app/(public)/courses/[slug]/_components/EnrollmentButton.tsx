@@ -10,9 +10,11 @@ import { Loader } from "lucide-react";
 export default function EnrollmentButton({
   courseId,
   isEnrolled,
+  courseSlug,
 }: {
   courseId: string;
   isEnrolled: boolean;
+  courseSlug: string;
 }) {
   const [pending, startTransition] = useTransition();
   const onSubmit = async () => {
@@ -31,7 +33,7 @@ export default function EnrollmentButton({
       {isEnrolled ? (
         <Link
           className={buttonVariants({ className: "w-full" })}
-          href={"/dashboard"}
+          href={`/dashboard/${courseSlug}`}
         >
           Watch Course
         </Link>
