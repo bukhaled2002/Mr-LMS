@@ -67,7 +67,7 @@ export default function AdminCourseCard({ data }: { data: AdminCourseType }) {
       />
       <CardContent className="p-5">
         <Link
-          href={`/admin/courses/${data.id}`}
+          href={`/admin/courses/${data.id}/edit`}
           className="font-medium text-lg line-clamp-2 hover:underline group-hover:text-primary transition-colors"
         >
           {data.title}
