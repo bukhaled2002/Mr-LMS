@@ -37,9 +37,15 @@ const aj = arcjet({
 export const config = {
   // matcher tells Next.js which routes to run the middleware on.
   // This runs the middleware on all routes except for static assets.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|api/auth|api/webhook/stripe).*)",
+  ],
 };
 export default createMiddleware(aj, async (request: NextRequest) => {
+  if (request.nextUrl.pathname.startsWith("/api/webhook/stripe")) {
+    return NextResponse.next();
+  }
+
   if (request.nextUrl.pathname.startsWith("/admin")) {
     return authMiddleware(request);
   }
