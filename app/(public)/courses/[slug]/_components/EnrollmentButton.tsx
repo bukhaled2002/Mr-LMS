@@ -19,7 +19,6 @@ export default function EnrollmentButton({
     startTransition(async () => {
       try {
         await enrollInCourse(courseId);
-        return;
       } catch (error) {
         console.log(error);
         toast.error("Failed to pay");

@@ -2,6 +2,8 @@ import { getAllCourses } from "@/app/data-layer/courses/public-courses";
 import CourseCard, { CourseCardSkelton } from "../_components/CourseCard";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default function page() {
   return (
     <div className="mt-6">
