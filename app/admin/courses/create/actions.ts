@@ -40,6 +40,11 @@ export async function createCourse(
     const product = await stripe.products.create({
       name: validation.data.title,
       description: validation.data.smallDescription,
+      images: validation.data.fileKey
+        ? [
+            `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${validation.data.fileKey}`,
+          ]
+        : [],
       default_price_data: {
         currency: "usd",
         unit_amount: validation.data.price * 100,
