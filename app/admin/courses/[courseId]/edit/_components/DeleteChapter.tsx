@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
-import { deleteChapter, deleteLesson } from "../action";
+import { deleteChapter } from "../action";
 import { toast } from "sonner";
 
 export function DeleteChapterModal({
@@ -39,6 +39,8 @@ export function DeleteChapterModal({
           setIsOpen(false);
         }
       } catch (error) {
+        console.log(error);
+
         toast.error("Unexpected error occured, please try again later");
       }
     });

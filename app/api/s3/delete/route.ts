@@ -1,4 +1,4 @@
-import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
+import arcjet, { fixedWindow } from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import { s3Client } from "@/lib/s3";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";

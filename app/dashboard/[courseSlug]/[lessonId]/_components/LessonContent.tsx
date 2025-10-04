@@ -20,6 +20,7 @@ export default function LessonContent({
   const { triggerConfetti } = useConfetti();
   useEffect(() => {
     updateLastViewedLesson(lesson.Chapter.coursesId, lesson.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleMarkAsComplete() {

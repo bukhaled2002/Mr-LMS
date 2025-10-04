@@ -5,7 +5,6 @@ import { Toggle } from "../ui/toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { Undo } from "lucide-react";
 
 interface EditorToggleButtonProps {
   editor: Editor | null;

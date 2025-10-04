@@ -21,25 +21,18 @@ import { AdminSinglCourseType } from "@/app/data-layer/admin/admin-get-course";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SortableItem } from "@/components/sortable/SortableItem";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronDown,
-  ChevronRight,
-  FileText,
-  GripVertical,
-  Trash2,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, GripVertical } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import Link from "next/link";
 import { toast } from "sonner";
 import CreateChapterModal from "./CreateChapterModal";
 import { changeChaptersOrder, changeLessonsOrder } from "../action";
-import { DeleteLessonModal } from "./DeleteLessonModal";
 import CreateLessonModal from "./CreateLessonModal";
 import { DeleteChapterModal } from "./DeleteChapter";
+import ChapterStructure from "./ChapterStructure";
 
 export default function CourseStructure({
   course,
@@ -136,6 +129,7 @@ export default function CourseStructure({
           return "chapter ordered successfully";
         },
         error: (err) => {
+          console.log(err);
           setItems(oldItems);
           return "Error in ordering chapters";
         },
@@ -203,6 +197,7 @@ export default function CourseStructure({
             throw new Error(response.message);
           },
           error: (err) => {
+            console.log(err);
             setItems(oldItems);
             return "Error in ordering lessons";
           },
@@ -277,45 +272,12 @@ export default function CourseStructure({
                         />
                       </div>
                       <CollapsibleContent>
+                        <p></p>
                         <div className="p-1">
-                          <SortableContext
-                            items={item.lessons.map((lesson) => lesson.id)}
-                            strategy={verticalListSortingStrategy}
-                          >
-                            {item.lessons.map((lesson) => (
-                              <SortableItem
-                                key={lesson.id}
-                                id={lesson.id}
-                                data={{ type: "lesson", chapterId: item.id }}
-                              >
-                                {(lessonListeners) => (
-                                  <div className="flex items-center justify-between p-2 hover:bg-accent rounded-sm">
-                                    <div className="flex items-center gap-2">
-                                      <Button
-                                        variant={"ghost"}
-                                        size={"icon"}
-                                        {...lessonListeners}
-                                      >
-                                        <GripVertical className="size-4 cursor-grab" />
-                                      </Button>
-                                      <FileText className="size-4" />
-                                      <Link
-                                        href={`/admin/courses/${course?.id}/${item.id}/${lesson.id}`}
-                                        className="hover:text-primary"
-                                      >
-                                        {lesson.title}
-                                      </Link>
-                                    </div>
-                                    <DeleteLessonModal
-                                      chapterId={item.id}
-                                      courseId={course?.id as string}
-                                      lessonId={lesson.id}
-                                    />
-                                  </div>
-                                )}
-                              </SortableItem>
-                            ))}
-                          </SortableContext>
+                          <ChapterStructure
+                            item={item}
+                            courseId={course?.id as string}
+                          />
                           <CreateLessonModal
                             chapterId={item.id}
                             courseId={course?.id as string}

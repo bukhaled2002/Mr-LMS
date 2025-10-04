@@ -27,6 +27,7 @@ export async function updateLesson(
     });
     return { message: "Lesson updated successfully", status: "success" };
   } catch (error) {
+    console.log(error);
     return { message: "Something went wrong", status: "error" };
   }
 }

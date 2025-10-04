@@ -1,6 +1,4 @@
-import { description } from "@/components/sidebar/chart-area-interactive";
 import z from "zod";
-import { vi } from "zod/v4/locales";
 
 export const CourseLevel = ["Beginner", "Intermediate", "Advanced"] as const;
 export const courseCategories = [

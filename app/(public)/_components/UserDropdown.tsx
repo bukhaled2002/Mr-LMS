@@ -32,7 +32,7 @@ export default function UserDropdown({ email, name, image }: UserProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
-            <AvatarImage src="./avatar.jpg" alt="Profile image" />
+            <AvatarImage src={image} alt="Profile image" />
             <AvatarFallback>{nameAbv}</AvatarFallback>
           </Avatar>
           <ChevronDownIcon

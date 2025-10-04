@@ -202,6 +202,7 @@ export async function deleteLesson({
 
     return { message: "lesson deleted successfully", status: "success" };
   } catch (error) {
+    console.log(error);
     return { message: "lesson cannot be deleted", status: "error" };
   }
 }
@@ -247,6 +248,8 @@ export async function deleteChapter({
 
     return { message: "chapter deleted successfully", status: "success" };
   } catch (error) {
+    console.log(error);
+
     return { message: "chapter cannot be deleted", status: "error" };
   }
 }

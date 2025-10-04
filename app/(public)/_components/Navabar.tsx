@@ -33,6 +33,7 @@ export default function Navabar() {
               <UserDropdown
                 email={session.user.email}
                 name={session.user.name}
+                image={session.user?.image || ""}
               />
             ) : (
               <></>

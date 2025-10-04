@@ -18,7 +18,7 @@ export default function EnrollmentButton({
   const onSubmit = async () => {
     startTransition(async () => {
       try {
-        const res = await enrollInCourse(courseId);
+        await enrollInCourse(courseId);
         return;
       } catch (error) {
         console.log(error);

@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db";
 import { requireUser } from "../user/require-user";
-import { t } from "media-chrome";
 
 export async function getEnrolledCourses() {
   const session = await requireUser();

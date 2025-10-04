@@ -8,7 +8,7 @@ import arcjet, { fixedWindow } from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-export const fileUploadSchema = z.object({
+const fileUploadSchema = z.object({
   fileName: z.string().min(1, { message: "please add fileName" }),
   contentType: z.string().min(1, { message: "please add content type" }),
   size: z.number().min(1, { message: "please Add Size" }),

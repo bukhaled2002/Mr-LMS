@@ -5,7 +5,7 @@ import { requireAdmin } from "./require-admin";
 import { notFound } from "next/navigation";
 
 export async function getAdminSingleCourse(courseId: string) {
-  const session = await requireAdmin();
+  await requireAdmin();
   console.log(courseId);
   try {
     const course = await prisma.courses.findFirst({

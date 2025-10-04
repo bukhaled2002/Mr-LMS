@@ -53,7 +53,7 @@ export default function CourseSidebar({
       </div>
       {/* loop on chapters and lessons */}
       <div className="py-4 pr-4 space-y-3">
-        {course.chapters.map((chapter, idx) => {
+        {course.chapters.map((chapter) => {
           const hasCurrentLesson = chapter.lessons.some(
             (lesson) => lesson.id === currentLessonId
           );

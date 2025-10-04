@@ -32,6 +32,7 @@ export default function Page() {
           return;
         }
       } catch (error) {
+        console.log(error);
         toast.error("Unexpected error occured, please try again later");
       }
     });

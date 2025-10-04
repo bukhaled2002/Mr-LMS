@@ -29,6 +29,7 @@ export async function adminGetDashboardStats(): Promise<{
       message: "Stats fetched successfully",
     };
   } catch (error) {
+    console.log(error);
     return {
       status: "error",
       message: "Failed to fetch stats",

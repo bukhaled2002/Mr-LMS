@@ -4,7 +4,7 @@ import LessonContent from "./_components/LessonContent";
 export default async function Page({
   params,
 }: {
-  params: { lessonId: string; courseSlug: string };
+  params: Promise<{ lessonId: string; courseSlug: string }>;
 }) {
   const { lessonId, courseSlug } = await params;
   console.log(lessonId, courseSlug);

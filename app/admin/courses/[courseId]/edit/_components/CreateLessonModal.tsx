@@ -8,14 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  chapterSchema,
-  chapterSchemaType,
-  lessonSchema,
-  lessonSchemaType,
-} from "@/lib/zodSchemas";
+import { lessonSchema, lessonSchemaType } from "@/lib/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
 import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import {

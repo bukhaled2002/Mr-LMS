@@ -9,12 +9,13 @@ import AdminCourseCard, {
   AdminCouseCardSkelton,
 } from "./courses/_components/AdminCourseCard";
 import { Suspense } from "react";
-export default async function page() {
-  const statsData = await adminGetEnrollmentsStats();
+export default async function Page() {
   return (
     <>
       <SectionCards />
-      <ChartAreaInteractive data={statsData || []} />
+      <Suspense fallback={<p>Loading...</p>}>
+        <RenderStats />
+      </Suspense>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Recent Courses</h2>
@@ -25,7 +26,7 @@ export default async function page() {
             View All Courses
           </Link>
         </div>
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<LoadingCourses />}>
           <RenderRecentCourse />
         </Suspense>
       </div>
@@ -33,6 +34,11 @@ export default async function page() {
   );
 }
 
+async function RenderStats() {
+  const statsData = await adminGetEnrollmentsStats();
+
+  return <ChartAreaInteractive data={statsData || []} />;
+}
 async function RenderRecentCourse() {
   const data = await adminGetRecentCourses();
 
@@ -55,7 +61,7 @@ async function RenderRecentCourse() {
   );
 }
 
-export function Loading() {
+function LoadingCourses() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {Array.from({ length: 2 }).map((_, idx) => (

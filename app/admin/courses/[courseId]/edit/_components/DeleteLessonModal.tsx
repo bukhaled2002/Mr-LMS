@@ -41,6 +41,8 @@ export function DeleteLessonModal({
           setIsOpen(false);
         }
       } catch (error) {
+        console.log(error);
+
         toast.error("Unexpected error occured, please try again later");
       }
     });

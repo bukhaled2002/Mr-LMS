@@ -1,6 +1,5 @@
 import { PublicSingleCourseType } from "@/app/data-layer/courses/public-single-course";
 import { isUserEnrolled } from "@/app/data-layer/user/is-user-enrolled";
-import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   IconBook,
@@ -9,9 +8,6 @@ import {
   IconClock,
 } from "@tabler/icons-react";
 import { CheckIcon } from "lucide-react";
-import Link from "next/link";
-import { useTransition } from "react";
-import { toast } from "sonner";
 import EnrollmentButton from "./EnrollmentButton";
 
 export default async function EnrollmentCard({
