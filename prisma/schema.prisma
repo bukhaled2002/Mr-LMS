@@ -31,7 +31,7 @@ model User {
   courses       Courses[]
 
   enrollments Enrollment[]
-  role        String?
+  role        String       @default("user")
   banned      Boolean?     @default(false)
   banReason   String?
   banExpires  DateTime?

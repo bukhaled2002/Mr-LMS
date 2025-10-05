@@ -1,5 +1,23 @@
 import z from "zod";
 
+export const signinSchema = z.object({
+  email: z.email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+export const signupSchema = z
+  .object({
+    email: z.email("Invalid email address"),
+    name: z.string().min(3, "Name must be at least 3 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm Password must be at least 6 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"], // error will show under confirmPassword
+  });
+
 export const CourseLevel = ["Beginner", "Intermediate", "Advanced"] as const;
 export const courseCategories = [
   "Development",
@@ -60,6 +78,8 @@ export const lessonSchema = z.object({
   description: z.string().optional(),
 });
 
+export type signinSchemaType = z.input<typeof signinSchema>;
+export type signupSchemaType = z.input<typeof signupSchema>;
 export type courseSchemaType = z.input<typeof courseSchema>;
 export type chapterSchemaType = z.input<typeof chapterSchema>;
 export type lessonSchemaType = z.input<typeof lessonSchema>;

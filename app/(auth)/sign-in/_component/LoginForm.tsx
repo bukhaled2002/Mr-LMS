@@ -7,33 +7,69 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import { signinSchema, signinSchemaType } from "@/lib/zodSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GithubIcon, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
   const router = useRouter();
   const [githubPending, startGithubTransition] = useTransition();
   const [googlePending, startGoodleTransition] = useTransition();
-  const [emailPending, startEmailTransition] = useTransition();
+  const [signinPending, startSigninTransition] = useTransition();
 
-  async function signUpWithEmail() {
-    startEmailTransition(async () => {
-      await authClient.emailOtp.sendVerificationOtp({
+  const form = useForm<signinSchemaType>({
+    resolver: zodResolver(signinSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  async function onSubmit(values: signinSchemaType) {
+    const result = signinSchema.safeParse(values);
+    if (result.success === false) {
+      toast.error("Invalid input data");
+      return;
+    }
+    signInWithEmail({ email: values.email, password: values.password });
+    console.log(values);
+
+    return;
+  }
+  async function signInWithEmail({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) {
+    startSigninTransition(async () => {
+      await authClient.signIn.email({
         email,
-        type: "sign-in",
+        password,
         fetchOptions: {
           onSuccess() {
-            toast.success("OTP sent to your email successfully");
-            router.push(`/verify-email?email=${email}`);
+            toast.success("signed in successfully");
+            form.reset();
+            router.push(`/`);
           },
           onError(error) {
             console.log(error);
-            toast.error("Error in sending otp, please try again later");
+            toast.error("cannot sign in, please try again later");
           },
         },
       });
@@ -81,6 +117,45 @@ export default function LoginForm() {
         <CardDescription>Login with Github Email account</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="johndoe@gmail.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="........." {...field} type="password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="w-full">
+              {signinPending ? "Signing ip" : "Sign ip"}
+            </Button>
+          </form>
+        </Form>
+        <div className="relative text-center text-sm after:inset-0 after:absolute after:top-1/2 after:flex after:items-center after:z-0 after:border-t after:border-border">
+          <span className="relative bg-card p-2 z-10 text-muted-foreground">
+            or continue with
+          </span>
+        </div>
         <Button
           disabled={githubPending}
           className="w-full"
@@ -111,25 +186,6 @@ export default function LoginForm() {
             <>sign in with gmail</>
           )}
         </Button>
-        <div className="relative text-center text-sm after:inset-0 after:absolute after:top-1/2 after:flex after:items-center after:z-0 after:border-t after:border-border">
-          <span className="relative bg-card p-2 z-10 text-muted-foreground">
-            or continue with
-          </span>
-        </div>
-        <div className="grid gap-3">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              placeholder="johndoe@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <Button disabled={emailPending} onClick={signUpWithEmail}>
-            Continue with Email
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );
