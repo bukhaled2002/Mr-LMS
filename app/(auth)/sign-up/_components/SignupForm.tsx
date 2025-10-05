@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 export default function SignupForm() {
   const [emailPending, startEmailTransition] = useTransition();
   const router = useRouter();
@@ -144,7 +145,14 @@ export default function SignupForm() {
             />
             <Button type="submit" className="w-full">
               {emailPending ? "Signing up" : "Sign up"}
-            </Button>
+            </Button>{" "}
+            <p className="text-xs text-muted-foreground text-center">
+              {"Already has an account? "}
+
+              <Link href={"/sign-in"} className="underline hover:text-primary">
+                sign in
+              </Link>
+            </p>
           </form>
         </Form>
       </CardContent>

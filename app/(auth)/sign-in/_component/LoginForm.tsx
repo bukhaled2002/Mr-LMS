@@ -19,7 +19,9 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { signinSchema, signinSchemaType } from "@/lib/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconBrandGoogleFilled } from "@tabler/icons-react";
 import { GithubIcon, Loader } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -117,6 +119,44 @@ export default function LoginForm() {
         <CardDescription>Login with Github Email account</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        <Button
+          disabled={githubPending}
+          className="w-full"
+          variant={"outline"}
+          onClick={signUpWithGithub}
+        >
+          {githubPending ? (
+            <>
+              <Loader className="size-4 animate-spin" /> Loading
+            </>
+          ) : (
+            <>
+              <GithubIcon className="size-4" /> sign in with github
+            </>
+          )}
+        </Button>
+        <Button
+          disabled={googlePending}
+          className="w-full"
+          variant={"outline"}
+          onClick={signUpWithGoogle}
+        >
+          {googlePending ? (
+            <>
+              <Loader className="size-4 animate-spin" /> Loading
+            </>
+          ) : (
+            <>
+              <IconBrandGoogleFilled className="size-4" />
+              sign in with gmail
+            </>
+          )}
+        </Button>
+        <div className="relative text-center text-sm after:inset-0 after:absolute after:top-1/2 after:flex after:items-center after:z-0 after:border-t after:border-border">
+          <span className="relative bg-card p-2 z-10 text-muted-foreground">
+            or continue with
+          </span>
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -146,46 +186,18 @@ export default function LoginForm() {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              {signinPending ? "Signing ip" : "Sign ip"}
+            <Button type="submit" className="w-full" disabled={signinPending}>
+              {signinPending ? "Signing in..." : "Sign in"}
             </Button>
           </form>
         </Form>
-        <div className="relative text-center text-sm after:inset-0 after:absolute after:top-1/2 after:flex after:items-center after:z-0 after:border-t after:border-border">
-          <span className="relative bg-card p-2 z-10 text-muted-foreground">
-            or continue with
-          </span>
-        </div>
-        <Button
-          disabled={githubPending}
-          className="w-full"
-          variant={"outline"}
-          onClick={signUpWithGithub}
-        >
-          {githubPending ? (
-            <>
-              <Loader className="size-4 animate-spin" /> Loading
-            </>
-          ) : (
-            <>
-              <GithubIcon className="size-4" /> sign in with github
-            </>
-          )}
-        </Button>
-        <Button
-          disabled={googlePending}
-          className="w-full"
-          variant={"outline"}
-          onClick={signUpWithGoogle}
-        >
-          {googlePending ? (
-            <>
-              <Loader className="size-4 animate-spin" /> Loading
-            </>
-          ) : (
-            <>sign in with gmail</>
-          )}
-        </Button>
+        <p className="text-xs text-muted-foreground text-center">
+          {"Don't have an account, "}
+
+          <Link href={"/sign-up"} className="underline hover:text-primary">
+            sign up
+          </Link>
+        </p>
       </CardContent>
     </Card>
   );

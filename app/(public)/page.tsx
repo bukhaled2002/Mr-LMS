@@ -3,7 +3,14 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
-import { Users, ChartColumn, SquareMousePointer, Blocks } from "lucide-react";
+import {
+  Users,
+  ChartColumn,
+  SquareMousePointer,
+  Blocks,
+  Loader,
+  Loader2,
+} from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 interface Feature {
@@ -41,7 +48,11 @@ const features: Feature[] = [
 export default function Page() {
   const { data: session, isPending } = authClient.useSession();
   if (isPending) {
-    return <p className="text-center">Loading...</p>;
+    return (
+      <div className="h-[80vh] flex items-center justify-center">
+        <Loader2 className="size-16 animate-spin" />
+      </div>
+    );
   }
   return (
     <>

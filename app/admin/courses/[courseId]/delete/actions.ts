@@ -5,13 +5,14 @@ import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/types";
 import { request } from "@arcjet/next";
 import { revalidatePath } from "next/cache";
-const aj = arcjet.withRule(fixedWindow({ mode: "LIVE", max: 2, window: "5m" }));
+const aj = arcjet.withRule(fixedWindow({ mode: "LIVE", max: 3, window: "5m" }));
 
 export async function deleteCouse(couseId: string): Promise<ApiResponse> {
   const session = await requireAdmin();
   const req = await request();
   try {
     const decision = await aj.protect(req, { fingerprint: session.user.id });
+    console.log(decision.reason);
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
         return {

@@ -7,6 +7,13 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const navigationItems = [
   { name: "Home", href: "/" },
@@ -54,6 +61,7 @@ export default function Navabar() {
           </div>
         </nav>
         {/* Mobile nav */}
+
         <div className="md:hidden flex flex-1 items-center justify-end gap-2">
           <ThemeToggle />
           {!isPending && session?.user && (
@@ -63,33 +71,32 @@ export default function Navabar() {
               image={session.user?.image || ""}
             />
           )}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 hover:bg-accent rounded-md transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
-      </div>
 
-      {/* Mobile menu dropdown */}
-      {mobileMenuOpen && (
-        <div className="absolute md:hidden border-t mt-4 bg-background/90 w-full shadow-lg">
-          <nav className="container m-auto py-2 flex flex-col space-y-3">
+        {/* Mobile menu dropdown */}
+
+        <DropdownMenu open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <DropdownMenuTrigger className="md:hidden" asChild>
+            <Button>
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
             {navigationItems.map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className="px-3 py-2 hover:bg-accent rounded-md transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
+              <DropdownMenuItem asChild key={index}>
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="px-3 py-2 hover:bg-accent rounded-md transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              </DropdownMenuItem>
             ))}
-          </nav>
-        </div>
-      )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }
