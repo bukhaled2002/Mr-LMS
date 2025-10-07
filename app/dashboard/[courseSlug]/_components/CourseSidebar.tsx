@@ -1,16 +1,17 @@
 "use client";
 import { CourseSideBarDataType } from "@/app/data-layer/courses/get-course-sidebar-data";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
-import { ChevronDown, Play } from "lucide-react";
+import { ArrowLeft, ChevronDown, Play } from "lucide-react";
 import LessonItem from "./LessonItem";
 import { usePathname } from "next/navigation";
 import useCourseProgress from "@/hooks/use-course-progress";
+import Link from "next/link";
 
 export default function CourseSidebar({
   course,
@@ -24,7 +25,14 @@ export default function CourseSidebar({
   const currentLessonId = pathname.split("/").pop();
   return (
     <div className="flex flex-col h-full py-4 md:py-6">
+      {" "}
       <div className="pb-4 pr-4 border-b border-border">
+        {/* <Link
+          className={buttonVariants({ variant: "outline" })}
+          href={"/dashboard"}
+        >
+          <ArrowLeft />
+        </Link> */}
         <div className="flex items-center gap-3 mb-3">
           <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
             <Play className="size-5 text-primary" />
