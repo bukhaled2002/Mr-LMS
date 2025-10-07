@@ -5,6 +5,9 @@ import arcjet, { createMiddleware, detectBot } from "@arcjet/next";
 export async function authMiddleware(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
 
+  // THIS IS NOT SECURE!
+  // This is the recommended approach to optimistically redirect users
+  // We recommend handling auth checks in each page/route
   if (!sessionCookie) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
@@ -12,39 +15,34 @@ export async function authMiddleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// ✅ Function to detect Upwork crawler manually
-function isUpworkBot(request: NextRequest) {
-  const userAgent = request.headers.get("user-agent") || "";
-  return /UpworkBot|Upwork/i.test(userAgent);
-}
-
 const aj = arcjet({
-  key: process.env.ARCJET_KEY!,
+  key: process.env.ARCJET_KEY!, // Get your site key from https://app.arcjet.com
   rules: [
     detectBot({
-      mode: "LIVE", // or "DRY_RUN" to test
+      mode: "DRY_RUN", // will block requests. Use "DRY_RUN" to log only
+      // Block all bots except the following
       allow: [
-        "CATEGORY:SEARCH_ENGINE", // Google, Bing, etc.
+        "CATEGORY:SEARCH_ENGINE", // Google, Bing, etc
         "STRIPE_WEBHOOK",
-        "CATEGORY:MONITOR", // uptime bots
-        "CATEGORY:PREVIEW", // Slack, Discord, etc.
+        // Uncomment to allow these other common bot categories
+        // See the full list at https://arcjet.com/bot-list
+        "CATEGORY:MONITOR", // Uptime monitoring services
+        "CATEGORY:PREVIEW", // Link previews e.g. Slack, Discord
+        //add upwork
       ],
     }),
   ],
 });
+// Pass any existing middleware with the optional existingMiddleware prop
 
 export const config = {
+  // matcher tells Next.js which routes to run the middleware on.
+  // This runs the middleware on all routes except for static assets.
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|api/auth|api/webhook/stripe).*)",
   ],
 };
-
 export default createMiddleware(aj, async (request: NextRequest) => {
-  // ✅ Skip Arcjet blocking for Upwork crawler
-  if (isUpworkBot(request)) {
-    return NextResponse.next();
-  }
-
   if (request.nextUrl.pathname.startsWith("/api/webhook/stripe")) {
     return NextResponse.next();
   }
@@ -52,6 +50,5 @@ export default createMiddleware(aj, async (request: NextRequest) => {
   if (request.nextUrl.pathname.startsWith("/admin")) {
     return authMiddleware(request);
   }
-
   return NextResponse.next();
 });
