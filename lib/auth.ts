@@ -35,5 +35,3 @@ export const auth = betterAuth({
     admin(),
   ],
 });
-
-export type Session = typeof auth.$Infer.Session;
